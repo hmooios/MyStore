@@ -11,37 +11,26 @@ struct ContentView: View {
     @State private var products = [Product]()
 
     var body: some View {
-        List(products, id: \.id) { result in
-            HStack(alignment: .top) {
-                // Image
-                AsyncImage(url: URL(string: result.images[0])) { image in
+        List(products,id: \.id) { product in
+            AsyncImage(url: URL(string: product.image)){phase in
+                if let image = phase.image{
                     image
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 100, height: 100)
-                } placeholder: {
+                }else if phase.error != nil{
+                    Text("There was an error loading images")
+                }else{
                     ProgressView()
-                }
-
-                // Title and price
-                VStack(alignment: .leading) {
-                    Text(result.title)
-                        .font(.headline)
-                    Text("$\(result.price).00")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
                 }
             }
         }
-        .navigationTitle("Jewelry")
         .task {
             await loadData()
         }
-
-        
     }
+                           
     func loadData() async {
-        guard let url = URL(string: "https://api.escuelajs.co/api/v1/products") else {
+        guard let url = URL(string: "https://fakestoreapi.com/products") else {
             print("Invalid URL.")
             return
         }

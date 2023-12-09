@@ -8,14 +8,14 @@
 import Foundation
 
 struct Product: Codable, Identifiable {
-    
     let id: Int
     let title: String
-    let price: Int
+    let price: Double
     let description: String
-    let images: [String]
-    let creationAt: String
-    let updatedAt: String
-    
-}
+    let image: String
 
+//    // Implementing Identifiable protocol
+//    var id: Int {
+//        return self.id
+//    }
+}

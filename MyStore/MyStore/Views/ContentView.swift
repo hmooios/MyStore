@@ -9,21 +9,43 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var products = [Product]()
+    @State private var address = Address()
+    @StateObject var productManager = ProductManager()
+    var columns = [GridItem(.adaptive(minimum: 160), spacing: 20)]
+    
 
     var body: some View {
-        List(products,id: \.id) { product in
-            AsyncImage(url: URL(string: product.image)){phase in
-                if let image = phase.image{
-                    image
-                        .resizable()
-                        .scaledToFit()
-                }else if phase.error != nil{
-                    Text("There was an error loading images")
-                }else{
-                    ProgressView()
+      
+        NavigationView {
+            ScrollView {
+                LazyVGrid(columns: columns,spacing: 20)
+                 {
+                    ForEach(products) { product in
+                        NavigationLink {
+                          //  Text(product.description)
+                            ProductDetailsView(product: product)
+                        } label: {
+                            ProductCard(product: product)
+                                .environmentObject(productManager)
+                        }
+
+
+                    }
+                 }.padding()
+            }
+            .navigationTitle("My store")
+            .toolbar{
+                NavigationLink {
+                    CartView( numberOfProducts: productManager.products.count, address: address)
+                        .environmentObject(productManager)
+                } label: {
+                    CartButton(numberOfProduct: productManager.products.count)
                 }
             }
+
         }
+        .environmentObject(productManager)
+        
         .task {
             await loadData()
         }

@@ -14,8 +14,5 @@ struct Product: Codable, Identifiable {
     let description: String
     let image: String
 
-//    // Implementing Identifiable protocol
-//    var id: Int {
-//        return self.id
-//    }
+    static let example = Product(id: 1, title: "Unknown title", price: 0.00, description: "Unknown description", image: "photo")
 }
